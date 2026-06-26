@@ -234,16 +234,5 @@ The application gracefully handles:
 
 ---
 
-# Author
-
-**Khushi Singh**
-
-B.Tech – Computer Science & Engineering (Data Science)
-
-GL Bajaj Institute of Technology & Management
-
 ---
 
-# Evaluation
-
-Developed as part of the **AffordMed Campus Hiring Evaluation – Vehicle Maintenance Scheduler Microservice**.

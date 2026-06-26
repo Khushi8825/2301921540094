@@ -1,7 +1,8 @@
 {
   "name": "logging-middleware",
   "version": "1.0.0",
-  "description": "",
+  "description": "Shared logging middleware for Campus Evaluation backend services",
+  "type": "module",
   "main": "src/middleware/logger.js",
    "scripts": {
     "example": "node example/usage.js"

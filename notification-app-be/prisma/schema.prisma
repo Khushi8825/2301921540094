@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum NotificationType {
+  PLACEMENT
+  RESULT
+  EVENT
+  GENERAL
+}
+
+enum NotificationPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model Student {
+  id        String   @id @default(cuid())
+  rollNo    String   @unique
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reads       NotificationRead[]
+  preferences NotificationPreference[]
+}
+
+model Notification {
+  id        String               @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType
+  priority  NotificationPriority
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  reads NotificationRead[]
+
+  @@index([type])
+  @@index([priority])
+  @@index([createdAt])
+}
+
+model NotificationRead {
+  id             String    @id @default(cuid())
+  studentId      String
+  notificationId String
+  isRead         Boolean   @default(false)
+  readAt         DateTime?
+
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, notificationId])
+  @@index([studentId])
+  @@index([notificationId])
+}
+
+model NotificationPreference {
+  id        String @id @default(cuid())
+  studentId String
+
+  placement Boolean @default(true)
+  result    Boolean @default(true)
+  event     Boolean @default(true)
+  general   Boolean @default(true)
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId])
+}

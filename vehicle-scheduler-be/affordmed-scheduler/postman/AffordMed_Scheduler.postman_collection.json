@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "AffordMed Vehicle Maintenance Scheduler",
+    "_postman_id": "affordmed-scheduler-v1",
+    "description": "Postman collection for the AffordMed Vehicle Maintenance Scheduler Microservice.\n\nSet the `baseUrl` collection variable to your running server (default: http://localhost:3000).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Liveness probe. Returns server uptime and memory usage."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Scheduler",
+      "item": [
+        {
+          "name": "Compute Maintenance Schedule",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/schedule",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "schedule"]
+            },
+            "description": "Fetches depots and vehicles from the AffordMed APIs, groups maintenance tasks by depot, and runs the 0/1 Knapsack DP optimisation per depot.\n\nReturns the selected TaskIDs that maximise impact within each depot's MechanicHours budget."
+          },
+          "response": [
+            {
+              "name": "200 – Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/schedule",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "schedule"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-06-01T10:00:00.000Z\",\n  \"count\": 2,\n  \"schedule\": [\n    {\n      \"depotId\": \"D1\",\n      \"depotName\": \"Central Depot\",\n      \"mechanicHours\": 40,\n      \"taskCount\": 10,\n      \"selectedTaskIds\": [\"T1\", \"T3\", \"T7\"],\n      \"totalImpact\": 85,\n      \"totalDuration\": 38\n    },\n    {\n      \"depotId\": \"D2\",\n      \"depotName\": \"East Depot\",\n      \"mechanicHours\": 30,\n      \"taskCount\": 6,\n      \"selectedTaskIds\": [\"T2\", \"T5\"],\n      \"totalImpact\": 60,\n      \"totalDuration\": 28\n    }\n  ]\n}"
+            },
+            {
+              "name": "500 – API Error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/schedule",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "schedule"]
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": false,\n  \"timestamp\": \"2024-06-01T10:00:00.000Z\",\n  \"error\": {\n    \"message\": \"Depot API error: Request failed with status code 401\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

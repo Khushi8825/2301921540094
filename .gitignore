@@ -1,0 +1,5 @@
+logging-middleware/node_modules
+notification-app-be/node_modules
+vehicle-scheduler-be/node_modules
+
+*.env
